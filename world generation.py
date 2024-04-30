@@ -1,7 +1,7 @@
 import tsapp
 import blocks
 import random
-from pprint import pp
+# from pprint import pp
 
 
 # While world generation seems complicated, it's actually quite simple.
@@ -57,6 +57,24 @@ class WorldGeneration:
                     air = tsapp.Sprite("sprites/air block.png", 0, 0)
                     block = blocks.Block(air, (), "air block", False, self.window)
                     self.world[y][x] = block
+
+        # Makes the fine line between the stone and dirt layer more "organic"
+        for x in range(self.world_width):
+            go_down = random.choice((False, False, True))
+            if go_down:
+                dirt = tsapp.Sprite("sprites/dirt block.png", 0, 0)
+                block = blocks.Block(dirt, (), "dirt block", True, self.window)
+                self.world[(int((self.world_height / 10)) * 2) + 1][x] = block
+        for x in range(self.world_width):
+            go_up = random.choice((False, False, True))
+            if go_up:
+                stone = tsapp.Sprite("sprites/stone block.png", 0, 0)
+                block = blocks.Block(stone, (), "stone block", True, self.window)
+                self.world[(int((self.world_height / 10)) * 2)][x] = block
+
+        # Adds Patches of Dirt in the Stone Layer.
+
+        pass
 
     def generate_map(self):
         for y in range(self.world_height):
