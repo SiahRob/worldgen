@@ -39,7 +39,7 @@ class WorldGeneration:
         # Gets the middle of the dirt layer to create the top layer with grass
         value = 0
         for x in range(self.world_width):
-            direction = random.choice(("up", "stay", "stay", "down"))
+            direction = random.choice(("up", "up", "stay", "stay", "stay", "down", "down"))
             if direction == "up" and value >= 1:
                 value -= 1
             elif direction == "down" and value <= 1:
@@ -49,8 +49,17 @@ class WorldGeneration:
             self.world[int(self.world_height / 10) + value][x] = block
 
         # Replaces all area above grass with air
+        for x in range(self.world_height):
+            for y in range(self.world_width):
+                if self.world[y][x].name == "grass block":
+                    break
+                elif self.world[y][x].name != "grass block":
+                    air = tsapp.Sprite("sprites/air block.png", 0, 0)
+                    block = blocks.Block(air, (), "air block", False, self.window)
+                    self.world[y][x] = block
 
-        pass
+
+
 
     def generate_map(self):
         for y in range(self.world_height):
