@@ -49,17 +49,14 @@ class WorldGeneration:
             self.world[int(self.world_height / 10) + value][x] = block
 
         # Replaces all area above grass with air
-        for x in range(self.world_height):
-            for y in range(self.world_width):
+        for x in range(self.world_width):
+            for y in range(self.world_height):
                 if self.world[y][x].name == "grass block":
                     break
                 elif self.world[y][x].name != "grass block":
                     air = tsapp.Sprite("sprites/air block.png", 0, 0)
                     block = blocks.Block(air, (), "air block", False, self.window)
                     self.world[y][x] = block
-
-
-
 
     def generate_map(self):
         for y in range(self.world_height):
