@@ -1,13 +1,24 @@
 import tsapp
 import blocks
 import random
+import math
 # from pprint import pp
+
+
+def _distance(x1, y1, x2, y2):
+    return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
+
+
+def _make_circle(world_list, center_y, center_x, radius, block):
+    for y in range(center_y - radius, center_y + radius):
+        for x in range(center_x - radius, center_x + radius):
+            if _distance(center_y, center_x, y, x) < radius / 1.1:
+                world_list[y][x] = block
 
 
 # While world generation seems complicated, it's actually quite simple.
 # Imagine it like you're sculpting. You start off with a base, put material onto it, and then sculpt out the features.
 # That's what this program is going to do, and the basis of world generation.
-
 class WorldGeneration:
 
     # Initialization function. Creates an empty grid, defined by the size that's imputed.
@@ -73,8 +84,9 @@ class WorldGeneration:
                 self.world[(int((self.world_height / 10)) * 2)][x] = block
 
         # Adds Patches of Dirt in the Stone Layer.
-
-        pass
+        dirt = tsapp.Sprite("sprites/dirt block.png", 0, 0)
+        block = blocks.Block(dirt, (), "dirt block", True, self.window)
+        _make_circle(self.world, 35, 50, 20, block)
 
     def generate_map(self):
         for y in range(self.world_height):
