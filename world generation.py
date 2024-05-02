@@ -26,7 +26,7 @@ class WorldGeneration:
         self.world = []
         self.world_width = 110 * int(size)
         self.world_height = 70 * int(size)
-        self.window = tsapp.GraphicsWindow()
+        self.window = tsapp.GraphicsWindow(1920, 1020, tsapp.WHITE)
         for y in range(self.world_height):
             y_list = []
             self.world.append(y_list)
@@ -50,10 +50,10 @@ class WorldGeneration:
         # Gets the middle of the dirt layer to create the top layer with grass
         value = 0
         for x in range(self.world_width):
-            direction = random.choice(("up", "up", "stay", "stay", "stay", "down", "down"))
-            if direction == "up" and value >= 1:
+            direction = random.choice(("up", "up", "up", "stay", "stay", "down", "down"))
+            if direction == "up" and value > -2:
                 value -= 1
-            elif direction == "down" and value <= 1:
+            elif direction == "down" and value < 1:
                 value += 1
             grass = tsapp.Sprite("sprites/grass block.png", 0, 0)
             block = blocks.Block(grass, (), "grass block", True, self.window)
@@ -84,15 +84,24 @@ class WorldGeneration:
                 self.world[(int((self.world_height / 10)) * 2)][x] = block
 
         # Adds Patches of Dirt in the Stone Layer.
-        dirt = tsapp.Sprite("sprites/dirt block.png", 0, 0)
-        block = blocks.Block(dirt, (), "dirt block", True, self.window)
-        _make_circle(self.world, 35, 50, 20, block)
+        patches = random.randint(int(self.world_height / 10),  int(self.world_width / 10))
+        for i in range(patches):
+            rand_radi = random.randint(int((self.world_height / 10) / 3), int((self.world_height / 10) / 2))
+            rand_x = random.randint(rand_radi, self.world_width - rand_radi)
+            rand_y = random.randint(rand_radi, (self.world_height - int((self.world_height / 10)) * 2) - rand_radi)
+            dirt = tsapp.Sprite("sprites/dirt block.png", 0, 0)
+            block = blocks.Block(dirt, (), "dirt block", True, self.window)
+            _make_circle(self.world, rand_y + int((self.world_height / 10)) * 2, rand_x, rand_radi, block)
+            sub_patches = random.randint(random.randint(int((self.world_height / 10) / 2), int((self.world_width / 10) / 2)))
+            for j in range(sub_patches):
+                print(j)
 
     def generate_map(self):
         for y in range(self.world_height):
             for x in range(self.world_width):
                 pixel = tsapp.Sprite("sprites/pixel sprites/" + self.world[y][x].name + " pixel.png", 0, 0)
                 self.window.add_object(pixel)
+                # add .1 for chunk view
                 pixel.x = x * 6
                 pixel.y = y * 6
                 self.window.add_object(pixel)
