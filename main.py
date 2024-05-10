@@ -18,7 +18,8 @@ def load_chunks(chunkrem, chunkadd):
 
     for chunk_y in range(len(chunkadd)):
         for chunk_x in range(len(chunkadd[chunk_y])):
-            chunkadd[chunk_y][chunk_x].block_has_collision = True
+            if not chunkadd[chunk_y][chunk_x].name == "air block":
+                chunkadd[chunk_y][chunk_x].block_has_collision = True
             chunkadd[chunk_y][chunk_x].sprite.visible = True
             chunkadd[chunk_y][chunk_x].refresh_sprite()
             window.add_object(chunkadd[chunk_y][chunk_x].sprite)
@@ -105,21 +106,20 @@ while window.is_running:
             continue
         break
 
-
     if player.center_x < 0:
         if not current_x_chunk == 0:
-            # load_chunks(chunks[current_chunk], chunks[current_chunk - 1])
+            load_chunks(chunks[current_y_chunk][current_x_chunk], chunks[current_y_chunk][current_x_chunk - 1])
             current_x_chunk -= 1
             player.center_x = 1070
-            player.y = chunks[current_x_chunk][-1].sprite.y - player.height - 1
+            player.y = chunks[current_y_chunk][current_x_chunk][-1][-1].sprite.y - player.height - 1
         elif player.x_speed < 0:
             player.x_speed = 0
     elif player.center_x > 1070:
         if not current_x_chunk == len(chunks) - 1:
-            # load_chunks(chunks[current_chunk], chunks[current_chunk + 1])
+            load_chunks(chunks[current_y_chunk][current_x_chunk], chunks[current_y_chunk][current_x_chunk + 1])
             current_x_chunk += 1
             player.center_x = 0
-            player.y = chunks[current_x_chunk][0].sprite.y - player.height - 1
+            player.y = chunks[current_y_chunk][current_x_chunk][0][0].sprite.y - player.height - 1
         elif player.x_speed > 0:
             player.x_speed = 0
 
