@@ -3,12 +3,11 @@ import tsapp
 
 class Block:
 
-    def __init__(self, sprite, position, name, collision, window):
+    def __init__(self, sprite, position, name, collision):
         self.sprite = sprite
         self.position = position
         self.name = name
         self.collision = collision
-        self.window = window
 
     @property
     def block_has_collision(self):
