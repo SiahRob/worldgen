@@ -2,7 +2,12 @@ import tsapp
 import blocks
 import random
 import math
-# from pprint import pp
+
+
+# saved block positions
+position_tuple = [(50 + (x * 97), 50 + (y * 97)) for y in range(7) for x in range(11)]
+position_tuple = tuple(position_tuple)
+print(position_tuple)
 
 
 def _distance(x1, y1, x2, y2):
@@ -24,8 +29,8 @@ class WorldGeneration:
     # Initialization function. Creates an empty grid, defined by the size that's imputed.
     def __init__(self, size):
         self.world = []
-        self.world_width = 110 * int(size)
-        self.world_height = 70 * int(size)
+        self.world_width = int(110 * size)
+        self.world_height = int(70 * size)
         self.window = tsapp.GraphicsWindow(1920, 1020, tsapp.WHITE)
         for y in range(self.world_height):
             y_list = []
@@ -40,23 +45,23 @@ class WorldGeneration:
             for x in range(self.world_width):
                 if y <= int((self.world_height / 10)) * 2:
                     dirt = tsapp.Sprite("sprites/dirt block.png", 0, 0)
-                    block = blocks.Block(dirt, (), "dirt block", True, self.window)
+                    block = blocks.Block(dirt, (), "dirt block", True)
                     self.world[y].append(block)
                 elif y > int((self.world_height / 10)) * 2:
                     stone = tsapp.Sprite("sprites/stone block.png", 0, 0)
-                    block = blocks.Block(stone, (), "stone block", True, self.window)
+                    block = blocks.Block(stone, (), "stone block", True)
                     self.world[y].append(block)
 
         # Gets the middle of the dirt layer to create the top layer with grass
-        value = 0
+        value = -1
         for x in range(self.world_width):
-            direction = random.choice(("up", "up", "up", "stay", "stay", "down", "down"))
-            if direction == "up" and value > -2:
+            direction = random.choice(("up", "up", "up", "stay", "stay", "down", "down", "down"))
+            if direction == "up" and value > -4:
                 value -= 1
-            elif direction == "down" and value < 1:
+            elif direction == "down" and value < -1:
                 value += 1
             grass = tsapp.Sprite("sprites/grass block.png", 0, 0)
-            block = blocks.Block(grass, (), "grass block", True, self.window)
+            block = blocks.Block(grass, (), "grass block", True)
             self.world[int(self.world_height / 10) + value][x] = block
 
         # Replaces all area above grass with air
@@ -66,7 +71,8 @@ class WorldGeneration:
                     break
                 elif self.world[y][x].name != "grass block":
                     air = tsapp.Sprite("sprites/air block.png", 0, 0)
-                    block = blocks.Block(air, (), "air block", False, self.window)
+                    block = blocks.Block(air, (), "air block", False)
+                    self.world[y][x].sprite.destroy()
                     self.world[y][x] = block
 
         # Makes the fine line between the stone and dirt layer more "organic"
@@ -74,41 +80,95 @@ class WorldGeneration:
             go_down = random.choice((False, False, True))
             if go_down:
                 dirt = tsapp.Sprite("sprites/dirt block.png", 0, 0)
-                block = blocks.Block(dirt, (), "dirt block", True, self.window)
+                block = blocks.Block(dirt, (), "dirt block", True)
                 self.world[(int((self.world_height / 10)) * 2) + 1][x] = block
         for x in range(self.world_width):
             go_up = random.choice((False, False, True))
             if go_up:
                 stone = tsapp.Sprite("sprites/stone block.png", 0, 0)
-                block = blocks.Block(stone, (), "stone block", True, self.window)
+                block = blocks.Block(stone, (), "stone block", True)
                 self.world[(int((self.world_height / 10)) * 2)][x] = block
 
         # Adds Patches of Dirt in the Stone Layer.
-        patches = random.randint(int(self.world_height / 10),  int(self.world_width / 10))
+        patches = random.randint(int(self.world_height / 10) * 5, int(self.world_width / 10) * 5)
         for i in range(patches):
-            rand_radi = random.randint(int((self.world_height / 10) / 3), int((self.world_height / 10) / 2))
+            rand_radi = random.randint(int((self.world_height / 10) / 3), int((self.world_height / 10) / 1.69))
             rand_x = random.randint(rand_radi, self.world_width - rand_radi)
             rand_y = random.randint(rand_radi, (self.world_height - int((self.world_height / 10)) * 2) - rand_radi)
             dirt = tsapp.Sprite("sprites/dirt block.png", 0, 0)
-            block = blocks.Block(dirt, (), "dirt block", True, self.window)
+            block = blocks.Block(dirt, (), "dirt block", True)
             _make_circle(self.world, rand_y + int((self.world_height / 10)) * 2, rand_x, rand_radi, block)
-            sub_patches = random.randint(random.randint(int((self.world_height / 10) / 2), int((self.world_width / 10) / 2)))
-            for j in range(sub_patches):
-                print(j)
 
-    def generate_map(self):
+        # Adds Patches of Air in the Stone Layer.
+        patches = random.randint(int(self.world_height / 10) * 5, int(self.world_width / 10) * 5)
+        for i in range(patches):
+            rand_radi = random.randint(int((self.world_height / 10) / 3), int((self.world_height / 10) / 1.69))
+            rand_x = random.randint(rand_radi, self.world_width - rand_radi)
+            rand_y = random.randint(rand_radi, (self.world_height - int((self.world_height / 10)) * 2) - rand_radi)
+            air = tsapp.Sprite("sprites/air block.png", 0, 0)
+            block = blocks.Block(air, (), "air block", False)
+            _make_circle(self.world, rand_y + int((self.world_height / 10)) * 2, rand_x, rand_radi, block)
+
+        # Should be the last thing to do, pack the world up into chunks and return them.
+        # make sure to make a list with proper values
+        chunk = []
+        for chunk_y in range(0, self.world_height, int(self.world_height / 10)):
+            temp_list1 = []
+            for chunk_x in range(0, self.world_width, int(self.world_width / 10)):
+                temp_list2 = []
+                for y in range(int(self.world_height / 10)):
+                    temp_list3 = []
+                    for x in range(int(self.world_width / 10)):
+                        temp_list3.append(self.world[y + chunk_y][x + chunk_x])
+                    temp_list2.append(temp_list3)
+                temp_list1.append(temp_list2)
+            chunk.append(temp_list1)
+
+        pos = 0
+        for chunk_y in range(len(chunk)):
+            for chunk_x in range(len(chunk[chunk_y])):
+                for y in range(len(chunk[chunk_y][chunk_x])):
+                    for x in range(len(chunk[chunk_y][chunk_x][y])):
+                        chunk[chunk_y][chunk_x][y][x].position = position_tuple[pos]
+                        chunk[chunk_y][chunk_x][y][x].refresh_sprite()
+                        if chunk[chunk_y][chunk_x][y][x].name == "air block":
+                            chunk[chunk_y][chunk_x][y][x].block_has_collision = False
+                        pos += 1
+                pos = 0
+
+        return chunk
+
+    # Testing Functions
+    def _generate_map(self):
         for y in range(self.world_height):
             for x in range(self.world_width):
                 pixel = tsapp.Sprite("sprites/pixel sprites/" + self.world[y][x].name + " pixel.png", 0, 0)
-                self.window.add_object(pixel)
-                # add .1 for chunk view
-                pixel.x = x * 6
-                pixel.y = y * 6
+                pixel.x = x * 5
+                pixel.y = (y * 5) + 500
                 self.window.add_object(pixel)
 
+    def _generate_chunk_map(self, chunk):
+        for y2 in range(len(chunk)):
+            for x2 in range(len(chunk[y2])):
+                for y in range(int(self.world_height / 10)):
+                    for x in range(int(self.world_width / 10)):
+                        pixel = tsapp.Sprite("sprites/pixel sprites/" + chunk[y2][x2][y][x].name + " pixel.png", 0, 0)
+                        pixel.x = (x * 5) + (x2 * int(self.world_width / 2))
+                        pixel.y = (y * 5) + (y2 * int(self.world_height / 2))
+                        self.window.add_object(pixel)
 
-world = WorldGeneration(1)
-world.generate_world()
-world.generate_map()
-while world.window.is_running:
-    world.window.finish_frame()
+    # -----------------------
+
+
+if __name__ == "__main__":
+    world = WorldGeneration(1)
+    chunk = world.generate_world()
+
+
+
+
+
+    world._generate_chunk_map(chunk)
+    #world._generate_map()
+    while world.window.is_running:
+        world.window.finish_frame()
