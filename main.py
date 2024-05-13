@@ -111,7 +111,10 @@ while window.is_running:
             load_chunks(chunks[current_y_chunk][current_x_chunk], chunks[current_y_chunk][current_x_chunk - 1])
             current_x_chunk -= 1
             player.center_x = 1070
-            player.y = chunks[current_y_chunk][current_x_chunk][-1][-1].sprite.y - player.height - 1
+            for y in range(int(world.world_height / 10)):
+                if chunks[current_y_chunk][current_x_chunk][y][-1].name == "grass block":
+                    player.y = chunks[current_y_chunk][current_x_chunk][y][-1].sprite.y - player.height - 1
+                    break
         elif player.x_speed < 0:
             player.x_speed = 0
     elif player.center_x > 1070:
@@ -119,7 +122,10 @@ while window.is_running:
             load_chunks(chunks[current_y_chunk][current_x_chunk], chunks[current_y_chunk][current_x_chunk + 1])
             current_x_chunk += 1
             player.center_x = 0
-            player.y = chunks[current_y_chunk][current_x_chunk][0][0].sprite.y - player.height - 1
+            for y in range(int(world.world_height / 10)):
+                if chunks[current_y_chunk][current_x_chunk][y][0].name == "grass block":
+                    player.y = chunks[current_y_chunk][current_x_chunk][y][0].sprite.y - player.height - 1
+                    break
         elif player.x_speed > 0:
             player.x_speed = 0
 
