@@ -7,7 +7,6 @@ import math
 # saved block positions
 position_tuple = [(50 + (x * 97), 50 + (y * 97)) for y in range(7) for x in range(11)]
 position_tuple = tuple(position_tuple)
-print(position_tuple)
 
 
 def _distance(x1, y1, x2, y2):
