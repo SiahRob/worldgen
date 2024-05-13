@@ -51,6 +51,40 @@ block_right_face_coll = False
 block_left_face_coll = False
 while window.is_running:
     seconds_passed = time.time() - start
+    mouse_x, mouse_y = tsapp.get_mouse_position()
+    for y in range(len(chunks[current_y_chunk][current_x_chunk])):
+        for x in range(len(chunks[current_y_chunk][current_x_chunk][y])):
+
+            if player.is_colliding_rect(chunks[current_y_chunk][current_x_chunk][y][x].sprite) and \
+                    chunks[current_y_chunk][current_x_chunk][y][x].block_has_collision:
+
+                if tsapp.was_key_pressed(tsapp.K_SPACE):
+                    start = time.time()
+                    player.y -= 10
+                    player.y_speed = -300
+                    break
+
+                elif chunks[current_y_chunk][current_x_chunk][y][x].sprite.y + 15 > player.y + player.height > \
+                        chunks[current_y_chunk][current_x_chunk][y][x].sprite.y and \
+                        chunks[current_y_chunk][current_x_chunk][y][x].block_has_collision:
+                    player.y_speed = 0
+                    player.y = chunks[current_y_chunk][current_x_chunk][y][x].sprite.y - player.height
+
+                elif chunks[current_y_chunk][current_x_chunk][y][x].sprite.y + \
+                        chunks[current_y_chunk][current_x_chunk][y][x].sprite.width - 15 < player.y < \
+                        chunks[current_y_chunk][current_x_chunk][y][x].sprite.y + \
+                        chunks[current_y_chunk][current_x_chunk][y][x].sprite.width and \
+                        chunks[current_y_chunk][current_x_chunk][y][x].block_has_collision:
+                    player.y_speed = 0
+                    player.y = chunks[current_y_chunk][current_x_chunk][y][x].sprite.y + \
+                               chunks[current_y_chunk][current_x_chunk][y][x].sprite.width
+
+            elif seconds_passed > 0.425:
+                player.y_speed = 300
+        else:
+            continue
+        break
+
     if tsapp.is_key_down(tsapp.K_d):
         for y in range(len(chunks[current_y_chunk][current_x_chunk])):
             for x in range(len(chunks[current_y_chunk][current_x_chunk][y])):
@@ -82,37 +116,13 @@ while window.is_running:
     else:
         player.x_speed = 0
 
-    for y in range(len(chunks[current_y_chunk][current_x_chunk])):
-        for x in range(len(chunks[current_y_chunk][current_x_chunk][y])):
-
-            if player.is_colliding_rect(chunks[current_y_chunk][current_x_chunk][y][x].sprite) and chunks[current_y_chunk][current_x_chunk][y][x].block_has_collision:
-                if tsapp.was_key_pressed(tsapp.K_SPACE):
-                    start = time.time()
-                    player.y -= 10
-                    player.y_speed = -300
-                    break
-
-                elif chunks[current_y_chunk][current_x_chunk][y][x].sprite.y + 15 > player.y + player.height > chunks[current_y_chunk][current_x_chunk][y][x].sprite.y and chunks[current_y_chunk][current_x_chunk][y][x].block_has_collision:
-                    player.y_speed = 0
-                    player.y = chunks[current_y_chunk][current_x_chunk][y][x].sprite.y - player.height
-
-                elif chunks[current_y_chunk][current_x_chunk][y][x].sprite.y + chunks[current_y_chunk][current_x_chunk][y][x].sprite.width - 15 < player.y < chunks[current_y_chunk][current_x_chunk][y][x].sprite.y + chunks[current_y_chunk][current_x_chunk][y][x].sprite.width and chunks[current_y_chunk][current_x_chunk][y][x].block_has_collision:
-                    player.y_speed = 0
-                    player.y = chunks[current_y_chunk][current_x_chunk][y][x].sprite.y + chunks[current_y_chunk][current_x_chunk][y][x].sprite.width + 1
-
-            elif seconds_passed > 0.425:
-                player.y_speed = 300
-        else:
-            continue
-        break
-
     if player.center_x < 0:
         if not current_x_chunk == 0:
             load_chunks(chunks[current_y_chunk][current_x_chunk], chunks[current_y_chunk][current_x_chunk - 1])
             current_x_chunk -= 1
             player.center_x = 1070
             for y in range(int(world.world_height / 10)):
-                if chunks[current_y_chunk][current_x_chunk][y][-1].name == "grass block":
+                if not chunks[current_y_chunk][current_x_chunk][y][-1].name == "air block":
                     player.y = chunks[current_y_chunk][current_x_chunk][y][-1].sprite.y - player.height - 1
                     break
         elif player.x_speed < 0:
@@ -123,7 +133,7 @@ while window.is_running:
             current_x_chunk += 1
             player.center_x = 0
             for y in range(int(world.world_height / 10)):
-                if chunks[current_y_chunk][current_x_chunk][y][0].name == "grass block":
+                if not chunks[current_y_chunk][current_x_chunk][y][0].name == "air block":
                     player.y = chunks[current_y_chunk][current_x_chunk][y][0].sprite.y - player.height - 1
                     break
         elif player.x_speed > 0:
@@ -133,5 +143,16 @@ while window.is_running:
         player.center_y = 714
     elif player.center_y > 714:
         player.center_y = 0
+
+    for y in range(len(chunks[current_y_chunk][current_x_chunk])):
+        for x in range(len(chunks[current_y_chunk][current_x_chunk][y])):
+            if chunks[current_y_chunk][current_x_chunk][y][x].sprite.is_colliding_point((mouse_x, mouse_y)) and tsapp.was_mouse_pressed() and not chunks[current_y_chunk][current_x_chunk][y][x].name == "air block":
+                chunks[current_y_chunk][current_x_chunk][y][x].name = "air block"
+                chunks[current_y_chunk][current_x_chunk][y][x].block_has_collision = False
+                chunks[current_y_chunk][current_x_chunk][y][x].refresh_sprite()
+                break
+        else:
+            continue
+        break
 
     window.finish_frame()
