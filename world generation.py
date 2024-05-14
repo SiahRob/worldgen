@@ -13,10 +13,12 @@ def _distance(x1, y1, x2, y2):
     return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
 
 
-def _make_circle(world_list, center_y, center_x, radius, block):
+def _make_circle(world_list, center_y, center_x, radius, name, collision):
     for y in range(center_y - radius, center_y + radius):
         for x in range(center_x - radius, center_x + radius):
             if _distance(center_y, center_x, y, x) < radius / 1.1:
+                sprite = tsapp.Sprite("sprites/" + name + ".png", 0, 0)
+                block = blocks.Block(sprite, (), name, collision)
                 world_list[y][x] = block
 
 
@@ -94,9 +96,7 @@ class WorldGeneration:
             rand_radi = random.randint(int((self.world_height / 10) / 3), int((self.world_height / 10) / 1.69))
             rand_x = random.randint(rand_radi, self.world_width - rand_radi)
             rand_y = random.randint(rand_radi, (self.world_height - int((self.world_height / 10)) * 2) - rand_radi)
-            dirt = tsapp.Sprite("sprites/dirt block.png", 0, 0)
-            block = blocks.Block(dirt, (), "dirt block", True)
-            _make_circle(self.world, rand_y + int((self.world_height / 10)) * 2, rand_x, rand_radi, block)
+            _make_circle(self.world, rand_y + int((self.world_height / 10)) * 2, rand_x, rand_radi, "dirt block", True)
 
         # Adds Patches of Air in the Stone Layer.
         patches = random.randint(int(self.world_height / 10) * 5, int(self.world_width / 10) * 5)
@@ -104,9 +104,7 @@ class WorldGeneration:
             rand_radi = random.randint(int((self.world_height / 10) / 3), int((self.world_height / 10) / 1.69))
             rand_x = random.randint(rand_radi, self.world_width - rand_radi)
             rand_y = random.randint(rand_radi, (self.world_height - int((self.world_height / 10)) * 2) - rand_radi)
-            air = tsapp.Sprite("sprites/air block.png", 0, 0)
-            block = blocks.Block(air, (), "air block", False)
-            _make_circle(self.world, rand_y + int((self.world_height / 10)) * 2, rand_x, rand_radi, block)
+            _make_circle(self.world, rand_y + int((self.world_height / 10)) * 2, rand_x, rand_radi, "air block", False)
 
         # Should be the last thing to do, pack the world up into chunks and return them.
         # make sure to make a list with proper values
@@ -130,15 +128,13 @@ class WorldGeneration:
                     for x in range(len(chunk[chunk_y][chunk_x][y])):
                         chunk[chunk_y][chunk_x][y][x].position = position_tuple[pos]
                         chunk[chunk_y][chunk_x][y][x].refresh_sprite()
-                        if chunk[chunk_y][chunk_x][y][x].name == "air block":
-                            chunk[chunk_y][chunk_x][y][x].block_has_collision = False
                         pos += 1
                 pos = 0
 
         return chunk
 
     # Testing Functions
-    def _generate_map(self):
+    def generate_map(self):
         for y in range(self.world_height):
             for x in range(self.world_width):
                 pixel = tsapp.Sprite("sprites/pixel sprites/" + self.world[y][x].name + " pixel.png", 0, 0)
@@ -168,6 +164,6 @@ if __name__ == "__main__":
 
 
     world._generate_chunk_map(chunk)
-    #world._generate_map()
+    # world.generate_map()
     while world.window.is_running:
         world.window.finish_frame()
