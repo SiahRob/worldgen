@@ -5,7 +5,14 @@ import world_generation as w
 
 world = w.WorldGeneration(1)
 chunks = world.generate_world()
-window = tsapp.GraphicsWindow(1070, 682, (200, 200, 255))
+window = tsapp.GraphicsWindow(1670, 682, (200, 200, 255))
+
+# need to add a camera instead of chunk based.
+# gotta rework how it gets compiled into chunks, rather give all blocks their unique position
+#  add two variables, x and y position, as the player moves, x and y position are updated
+# camera is centered to the players position
+# add an area around the camera, anything within that area is rendered, make it bigger than the screen ofc
+# 
 
 
 def load_chunks(chunkrem, chunkadd):
@@ -31,10 +38,9 @@ player.scale = 0.5
 player.center_x = 510
 player.center_y = 437
 
-for i in range(len(chunks[0][0][0])):
-    center_block_index = len(chunks[0]) / 2
-    player.y = chunks[0][0][0][int(center_block_index)].sprite.y - player.height * 1.2
-    player.center_x = chunks[0][0][0][int(center_block_index)].sprite.center_x
+
+player.y = 0
+player.center_x = 535
 
 
 for i in range(len(chunks[0][0])):
@@ -49,7 +55,21 @@ start = time.time()
 block_coll_var = 56
 block_right_face_coll = False
 block_left_face_coll = False
+
+
+for y2 in range(len(chunks)):
+    for x2 in range(len(chunks[y2])):
+        for y in range(int(world.world_height / 10)):
+            for x in range(int(world.world_width / 10)):
+                pixel = tsapp.Sprite("sprites/pixel sprites/" + chunks[y2][x2][y][x].name + " pixel.png", 0, 0)
+                pixel.x = (x * 5) + (x2 * int(world.world_width / 1.9)) + 1100
+                pixel.y = (y * 5) + (y2 * int(world.world_height / 1.9))
+                window.add_object(pixel)
+
+
+
 while window.is_running:
+
     seconds_passed = time.time() - start
     mouse_x, mouse_y = tsapp.get_mouse_position()
     for y in range(len(chunks[current_y_chunk][current_x_chunk])):
@@ -122,7 +142,7 @@ while window.is_running:
             current_x_chunk -= 1
             player.center_x = 1070
             for y in range(int(world.world_height / 10)):
-                if not chunks[current_y_chunk][current_x_chunk][y][-1].name == "air block":
+                if not chunks[current_y_chunk][current_x_chunk][y][-1].name == "air block" and current_y_chunk < 1:
                     player.y = chunks[current_y_chunk][current_x_chunk][y][-1].sprite.y - player.height - 1
                     break
         elif player.x_speed < 0:
@@ -133,16 +153,21 @@ while window.is_running:
             current_x_chunk += 1
             player.center_x = 0
             for y in range(int(world.world_height / 10)):
-                if not chunks[current_y_chunk][current_x_chunk][y][0].name == "air block":
+                if not chunks[current_y_chunk][current_x_chunk][y][0].name == "air block" and current_y_chunk < 1:
                     player.y = chunks[current_y_chunk][current_x_chunk][y][0].sprite.y - player.height - 1
                     break
         elif player.x_speed > 0:
             player.x_speed = 0
 
-    if player.center_y < 0:
-        player.center_y = 714
-    elif player.center_y > 714:
+    if player.center_y > 714:
         player.center_y = 0
+        load_chunks(chunks[current_y_chunk][current_x_chunk], chunks[current_y_chunk + 1][current_x_chunk])
+        current_y_chunk += 1
+    elif player.center_y < 0:
+        player.center_y = 714
+        load_chunks(chunks[current_y_chunk][current_x_chunk], chunks[current_y_chunk - 1][current_x_chunk])
+        current_y_chunk -= 1
+
 
     for y in range(len(chunks[current_y_chunk][current_x_chunk])):
         for x in range(len(chunks[current_y_chunk][current_x_chunk][y])):
