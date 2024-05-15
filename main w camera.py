@@ -2,6 +2,7 @@ import tsapp
 import time
 import pygame
 import world_generation as w
+import blocks
 pygame.init()
 
 world_class = w.WorldGeneration(1)
@@ -24,12 +25,17 @@ player.center_x = window.width / 2
 window.add_object(player)
 
 while window.is_running:
+    mouse_x, mouse_y = tsapp.get_mouse_position()
 
     for i in range(len(world)):
         if -100 < world[i].sprite.center_x < window.width + 100 and -100 < world[i].sprite.center_y < window.height + 100:
             window.add_object(world[i].sprite)
         if -100 < world[i].sprite.center_x < window.width + 100 and -100 < world[i].sprite.center_y < window.height + 100:
             world[i].sprite.destroy()
+        if world[i].sprite.is_colliding_point((mouse_x, mouse_y)) and tsapp.was_mouse_pressed():
+            air = tsapp.Sprite("sprites/air block.png", 0, 0)
+            block = blocks.Block(air, (), "air block", False)
+            world[i] = block
 
     if tsapp.is_key_down(tsapp.K_d):
         for i in range(len(world)):
