@@ -19,8 +19,8 @@ window = tsapp.GraphicsWindow(1070, 682, (200, 200, 255))
 
 player = tsapp.Sprite("sprites/player person.png", 0, 0)
 player.scale = 0.5
-player.center_y = 341
-player.center_x = 535
+player.center_y = window.height / 2
+player.center_x = window.width / 2
 window.add_object(player)
 
 while window.is_running:
