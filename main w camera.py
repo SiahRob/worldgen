@@ -5,8 +5,7 @@ import world_generation as w
 
 world_class = w.WorldGeneration(1)
 
-world = world_class.generate_world()
-print(world)
+world = world_class.generate_world() #1070 682
 window = tsapp.GraphicsWindow(1070, 682, (200, 200, 255))
 
 # need to add a camera instead of chunk based.
@@ -21,28 +20,46 @@ window = tsapp.GraphicsWindow(1070, 682, (200, 200, 255))
 player = tsapp.Sprite("sprites/player person.png", 0, 0)
 
 player.scale = 0.5
-player.center_x = 510
-player.center_y = 437
 player.center_y = 341
 player.center_x = 535
 window.add_object(player)
 
-x_position = 0
-y_position = 0
-while window.is_running:
+x_position = 970
+y_position = 682
+for i in range(len(world)):
+    if 100 < world[i].position[0] < 970 and 100 < world[i].position[1] < 682:
+        window.add_object(world[i].sprite)
 
-    if tsapp.is_key_down(tsapp.K_d):
-        x_position += 1
-    elif tsapp.is_key_down(tsapp.K_a):
-        x_position -= 1
-    if tsapp.is_key_down(tsapp.K_w):
-        y_position += 1
-    elif tsapp.is_key_down(tsapp.K_s):
-        y_position -= 1
+while window.is_running:
+    print(x_position, y_position)
 
     for i in range(len(world)):
-        if x_position == world[i].position[0] and y_position == world[i].position[1]:
-            window.add_object(world[i])
+        if 100 < world[i].position[0] < 970 and 100 < world[i].position[1] < 682:
+            window.add_object(world[i].sprite)
+            world[i].refresh_sprite()
+        if 100 > world[i].position[0] > 970 and 100 > world[i].position[1] > 682:
+            world[i].sprite.destroy()
+            world[i].refresh_sprite()
+
+    if tsapp.is_key_down(tsapp.K_d):
+        for i in range(len(world)):
+            world[i].sprite.x -= 20
+        x_position -= 20
+    elif tsapp.is_key_down(tsapp.K_a):
+        for i in range(len(world)):
+            world[i].sprite.x += 20
+        x_position += 20
+    if tsapp.is_key_down(tsapp.K_w):
+        for i in range(len(world)):
+            world[i].sprite.y += 20
+        y_position += 20
+    elif tsapp.is_key_down(tsapp.K_s):
+        for i in range(len(world)):
+            world[i].sprite.y -= 20
+        y_position -= 20
+
+
+
 
 
     window.finish_frame()
