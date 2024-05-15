@@ -108,6 +108,7 @@ class WorldGeneration:
             for x in range(self.world_width):
                 world_list.append(self.world[y][x])
                 self.world[y][x].position = (50 + (97 * x), 50 + (97 * y))
+                self.world[y][x].refresh_sprite()
 
         return world_list
 
