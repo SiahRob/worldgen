@@ -1,5 +1,5 @@
 import tsapp
-import time
+# import time
 import pygame
 import world_generation as w
 import blocks
@@ -42,28 +42,54 @@ while window.is_running:
             world[i] = block
 
     if tsapp.is_key_down(tsapp.K_d):
+        """
         for i in range(len(world)):
             block_right_face_coll = world[i].sprite.center_x - block_coll_var <= player.x + player.width <= world[i].sprite.center_x + block_coll_var and (player.y + player.height) > world[i].sprite.y + 15 and player.y < world[i].sprite.y + world[i].sprite.width
             if block_right_face_coll and world[i].block_has_collision:
                 break
         else:
             for i in range(len(world)):
-                world[i].sprite.x -= 10
+        """
+        for i in range(len(world)):
+            world[i].sprite.x -= 15
 
-    elif tsapp.is_key_down(tsapp.K_a):
+    if tsapp.is_key_down(tsapp.K_a):
+        """
         for i in range(len(world)):
             block_left_face_coll = world[i].sprite.center_x - block_coll_var <= player.x <= world[i].sprite.center_x + block_coll_var and (player.y + player.height) > world[i].sprite.y + 15 and player.y < world[i].sprite.y + world[i].sprite.width
             if block_left_face_coll and world[i].block_has_collision:
                 break
         else:
             for i in range(len(world)):
-                world[i].sprite.x += 10
+        """
+        for i in range(len(world)):
+            world[i].sprite.x += 15
 
     if tsapp.is_key_down(tsapp.K_w):
+        """"
+        for i in range(10):
+            for i in range(len(world)):
+                if player.is_colliding_rect(world[i].sprite) and world[i].block_has_collision:
+                    block_bottom_face_coll = world[i].sprite.y + world[i].sprite.width - 56 < player.y < world[i].sprite.y + world[i].sprite.width
+                    if block_bottom_face_coll and world[i].block_has_collision:
+                        break
+            else:
+                for i in range(len(world)):
+        """
         for i in range(len(world)):
-            world[i].sprite.y += 20
-    elif tsapp.is_key_down(tsapp.K_s):
+            world[i].sprite.y += 15
+
+    if tsapp.is_key_down(tsapp.K_s):
+        """
         for i in range(len(world)):
-            world[i].sprite.y -= 20
+            if player.is_colliding_rect(world[i].sprite) and world[i].block_has_collision:
+                block_top_face_coll = world[i].sprite.y + 56 > player.y + player.height > world[i].sprite.y
+                if block_top_face_coll and world[i].block_has_collision:
+                    break
+        else:
+            for i in range(len(world)):
+        """
+        for i in range(len(world)):
+            world[i].sprite.y -= 15
 
     window.finish_frame()
