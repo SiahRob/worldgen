@@ -8,7 +8,7 @@ pygame.init()
 world_class = w.WorldGeneration(1)
 
 world = world_class.generate_world()
-window = tsapp.GraphicsWindow(1920, 1020, (200, 200, 255))
+window = tsapp.GraphicsWindow(1070, 682, (200, 200, 255))
 
 # got camera working, need to figure out how to get smooth collision.
 # ideas to spruce up the generation a bit.
@@ -40,7 +40,7 @@ while window.is_running:
     if tsapp.is_key_down(tsapp.K_d):
 
         for i in range(len(world)):
-            block_right_face_coll = world[i].sprite.center_x - block_coll_var <= player.x + player.width <= world[i].sprite.center_x + block_coll_var and (player.y + player.height) > world[i].sprite.y + 15 and player.y < world[i].sprite.y + world[i].sprite.width
+            block_right_face_coll = world[i].sprite.center_x - block_coll_var <= player.x + player.width <= world[i].sprite.center_x + block_coll_var and (player.y + player.height) > world[i].sprite.y + 15 and player.y < world[i].sprite.y + world[i].sprite.width - 1
             if block_right_face_coll and world[i].block_has_collision:
                 move_var = world[i].sprite.x - (player.x + player.width)
                 for x in range(len(world)):
@@ -52,7 +52,7 @@ while window.is_running:
 
     if tsapp.is_key_down(tsapp.K_a):
         for i in range(len(world)):
-            block_left_face_coll = world[i].sprite.center_x - block_coll_var <= player.x <= world[i].sprite.center_x + block_coll_var and (player.y + player.height) > world[i].sprite.y + 15 and player.y < world[i].sprite.y + world[i].sprite.width
+            block_left_face_coll = world[i].sprite.center_x - block_coll_var <= player.x <= world[i].sprite.center_x + block_coll_var and (player.y + player.height) > world[i].sprite.y + 15 and player.y < world[i].sprite.y + world[i].sprite.width - 1
             if block_left_face_coll and world[i].block_has_collision:
                 move_var = world[i].sprite.x + world[i].sprite.width - player.x
                 for x in range(len(world)):
@@ -65,10 +65,9 @@ while window.is_running:
     if tsapp.is_key_down(tsapp.K_w):
         for i in range(len(world)):
             if player.is_colliding_rect(world[i].sprite) and world[i].block_has_collision:
-                block_bottom_face_coll = world[i].sprite.y + world[i].sprite.width - 56 < player.y < world[i].sprite.y + world[i].sprite.width
+                block_bottom_face_coll = world[i].sprite.y + world[i].sprite.width - 100 < player.y < world[i].sprite.y + world[i].sprite.width
                 if block_bottom_face_coll and world[i].block_has_collision:
                     move_var = world[i].sprite.y + world[i].sprite.height - (player.y + 33)
-                    print(move_var)
                     for y in range(len(world)):
                         world[y].sprite.y -= move_var
                     break
@@ -82,7 +81,6 @@ while window.is_running:
             block_top_face_coll = world[i].sprite.y + 56 > player.y + player.height > world[i].sprite.y
             if block_top_face_coll and world[i].block_has_collision:
                 move_var = world[i].sprite.y - (player.y + player.height - 3)
-                print(move_var)
                 for y in range(len(world)):
                     world[y].sprite.y -= move_var
                 break
@@ -91,4 +89,3 @@ while window.is_running:
             world[i].sprite.y -= 16.5
 
     window.finish_frame()
-
