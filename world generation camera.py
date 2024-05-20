@@ -85,6 +85,22 @@ class WorldGeneration:
                 block = blocks.Block(stone, (), "stone block", True)
                 self.world[(int((self.world_height / 10)) * 2)][x] = block
 
+        # Add some coal to the Stone Layer.
+        patches = random.randint(int(self.world_height / 10) * 5, int(self.world_width / 10) * 5)
+        for i in range(patches):
+            rand_radi = random.randint(int((self.world_height / 10) / 3), int((self.world_height / 10) / 2))
+            rand_x = random.randint(rand_radi, self.world_width - rand_radi)
+            rand_y = random.randint(rand_radi, (self.world_height - int((self.world_height / 10)) * 2) - rand_radi - 30)
+            _make_circle(self.world, rand_y + int((self.world_height / 10)) * 2, rand_x, rand_radi, "coal ore block", True)
+
+        # Add some iron to the Stone Layer.
+        patches = random.randint(int((self.world_height / 10) * 4), int((self.world_width / 10) * 4))
+        for i in range(patches):
+            rand_radi = random.randint(int((self.world_height / 10) / 3.5), int((self.world_height / 10) / 2.5))
+            rand_x = random.randint(rand_radi, self.world_width - rand_radi)
+            rand_y = random.randint(rand_radi + 17, (self.world_height - int((self.world_height / 10)) * 2) - rand_radi - 10)
+            _make_circle(self.world, rand_y + int((self.world_height / 10)) * 2, rand_x, rand_radi, "iron ore block", True)
+
         # Adds Patches of Dirt in the Stone Layer.
         patches = random.randint(int(self.world_height / 10) * 5, int(self.world_width / 10) * 5)
         for i in range(patches):
@@ -94,15 +110,14 @@ class WorldGeneration:
             _make_circle(self.world, rand_y + int((self.world_height / 10)) * 2, rand_x, rand_radi, "dirt block", True)
 
         # Adds Patches of Air in the Stone Layer.
-        patches = random.randint(int(self.world_height / 10) * 5, int(self.world_width / 10) * 5)
+        patches = random.randint(int(self.world_height / 10) * 5 + 1, int(self.world_width / 10) * 5 + 1)
         for i in range(patches):
-            rand_radi = random.randint(int((self.world_height / 10) / 3), int((self.world_height / 10) / 1.69))
+            rand_radi = random.randint(int((self.world_height / 10) / 3) + 1, int((self.world_height / 10) / 1.69))
             rand_x = random.randint(rand_radi, self.world_width - rand_radi)
-            rand_y = random.randint(rand_radi, (self.world_height - int((self.world_height / 10)) * 2) - rand_radi)
+            rand_y = random.randint(rand_radi, (self.world_height - int((self.world_height / 10)) * 2) - rand_radi - 1)
             _make_circle(self.world, rand_y + int((self.world_height / 10)) * 2, rand_x, rand_radi, "air block", False)
 
-        # Should be the last thing to do, pack the world up into chunks and return them.
-        # make sure to make a list with proper values
+        # Should be the last thing to do, give the blocks positions.
         world_list = []
         for y in range(self.world_height):
             for x in range(self.world_width):
@@ -118,7 +133,7 @@ class WorldGeneration:
             for x in range(self.world_width):
                 pixel = tsapp.Sprite("sprites/pixel sprites/" + self.world[y][x].name + " pixel.png", 0, 0)
                 pixel.x = x * 5
-                pixel.y = (y * 5) + 500
+                pixel.y = y * 5
                 self.window.add_object(pixel)
 
     # -----------------------
