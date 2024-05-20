@@ -7,13 +7,6 @@ world = w.WorldGeneration(1)
 chunks = world.generate_world()
 window = tsapp.GraphicsWindow(1670, 682, (200, 200, 255))
 
-# need to add a camera instead of chunk based.
-# gotta rework how it gets compiled into chunks, rather give all blocks their unique positionddddddddddddd
-#  add two variables, x and y position, as the player moves, x and y position are updated
-# camera is centered to the players position
-# add an area around the camera, anything within that area is rendered, make it bigger than the screen ofc
-#
-
 
 def load_chunks(chunkrem, chunkadd):
 
