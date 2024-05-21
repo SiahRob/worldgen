@@ -52,9 +52,9 @@ class WorldGeneration:
         value = -1
         for x in range(self.world_width):
             direction = random.choice(("up", "up", "up", "stay", "stay", "down", "down", "down"))
-            if direction == "up" and value > -4:
+            if direction == "up" and value > -2:
                 value -= 1
-            elif direction == "down" and value < -1:
+            elif direction == "down" and value < 2:
                 value += 1
             grass = tsapp.Sprite("sprites/grass block.png", 0, 0)
             block = blocks.Block(grass, (), "grass block", True)
