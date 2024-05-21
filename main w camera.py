@@ -40,7 +40,7 @@ while window.is_running:
     if tsapp.is_key_down(tsapp.K_d):
 
         for i in range(len(world)):
-            block_right_face_coll = world[i].sprite.center_x - block_coll_var <= player.x + player.width <= world[i].sprite.center_x + block_coll_var and (player.y + player.height) > world[i].sprite.y + 15 and player.y < world[i].sprite.y + world[i].sprite.width - 20
+            block_right_face_coll = world[i].sprite.center_x - block_coll_var <= player.x + player.width <= world[i].sprite.center_x + block_coll_var and (player.y + player.height) > world[i].sprite.y + 16 and player.y < world[i].sprite.y + world[i].sprite.width - 20
             if block_right_face_coll and world[i].block_has_collision:
                 move_var = world[i].sprite.x - (player.x + player.width)
                 for x in range(len(world)):
@@ -52,7 +52,7 @@ while window.is_running:
 
     if tsapp.is_key_down(tsapp.K_a):
         for i in range(len(world)):
-            block_left_face_coll = world[i].sprite.center_x - block_coll_var <= player.x <= world[i].sprite.center_x + block_coll_var and (player.y + player.height) > world[i].sprite.y + 15 and player.y < world[i].sprite.y + world[i].sprite.width - 20
+            block_left_face_coll = world[i].sprite.center_x - block_coll_var <= player.x <= world[i].sprite.center_x + block_coll_var and (player.y + player.height) > world[i].sprite.y + 16 and player.y < world[i].sprite.y + world[i].sprite.width - 20
             if block_left_face_coll and world[i].block_has_collision:
                 move_var = world[i].sprite.x + world[i].sprite.width - player.x
                 for x in range(len(world)):
@@ -62,7 +62,7 @@ while window.is_running:
             for i in range(len(world)):
                 world[i].sprite.x += 8.5
 
-    if tsapp.is_key_down(tsapp.K_w):
+    if tsapp.is_key_down(tsapp.K_SPACE):
         for i in range(len(world)):
             if player.is_colliding_rect(world[i].sprite) and world[i].block_has_collision:
                 block_bottom_face_coll = world[i].sprite.y + world[i].sprite.width - 100 < player.y < world[i].sprite.y + world[i].sprite.width
