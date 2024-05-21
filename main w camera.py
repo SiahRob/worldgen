@@ -10,7 +10,6 @@ world_class = w.WorldGeneration(1)
 world = world_class.generate_world()
 window = tsapp.GraphicsWindow(1070, 682, (200, 200, 255))
 
-# got camera working, need to figure out how to get smooth collision.
 # ideas to spruce up the generation a bit.
 # Iron ore, Coal Ore, Gold ore, diamond ore, trees
 
