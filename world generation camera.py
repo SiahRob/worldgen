@@ -85,13 +85,21 @@ class WorldGeneration:
                 block = blocks.Block(stone, (), "stone block", True)
                 self.world[(int((self.world_height / 10)) * 2)][x] = block
 
-        # Add some coal to the Stone Layer.
-        patches = random.randint(int(self.world_height / 10) * 5, int(self.world_width / 10) * 5)
+        # Add some diamond to the Stone Layer.
+        patches = random.randint(int(self.world_height * 1.5), int(self.world_width * 1.5))
         for i in range(patches):
-            rand_radi = random.randint(int((self.world_height / 10) / 3), int((self.world_height / 10) / 2))
+            rand_radi = 1
             rand_x = random.randint(rand_radi, self.world_width - rand_radi)
-            rand_y = random.randint(rand_radi, (self.world_height - int((self.world_height / 10)) * 2) - rand_radi - 30)
-            _make_circle(self.world, rand_y + int((self.world_height / 10)) * 2, rand_x, rand_radi, "coal ore block", True)
+            rand_y = random.randint(rand_radi + 35, (self.world_height - int((self.world_height / 10)) * 2) - rand_radi - 1)
+            _make_circle(self.world, rand_y + int((self.world_height / 10)) * 2, rand_x, rand_radi, "diamond ore block", True)
+
+        # Add some gold to the Stone Layer.
+        patches = random.randint(int((self.world_height / 10) * 4.5), int((self.world_width / 10) * 4.5))
+        for i in range(patches):
+            rand_radi = random.randint(1, 2)
+            rand_x = random.randint(rand_radi, self.world_width - rand_radi)
+            rand_y = random.randint(rand_radi + 30, (self.world_height - int((self.world_height / 10)) * 2) - rand_radi - 5)
+            _make_circle(self.world, rand_y + int((self.world_height / 10)) * 2, rand_x, rand_radi, "gold ore block", True)
 
         # Add some iron to the Stone Layer.
         patches = random.randint(int((self.world_height / 10) * 4), int((self.world_width / 10) * 4))
@@ -100,6 +108,14 @@ class WorldGeneration:
             rand_x = random.randint(rand_radi, self.world_width - rand_radi)
             rand_y = random.randint(rand_radi + 17, (self.world_height - int((self.world_height / 10)) * 2) - rand_radi - 10)
             _make_circle(self.world, rand_y + int((self.world_height / 10)) * 2, rand_x, rand_radi, "iron ore block", True)
+
+        # Add some coal to the Stone Layer.
+        patches = random.randint(int(self.world_height / 10) * 5, int(self.world_width / 10) * 5)
+        for i in range(patches):
+            rand_radi = random.randint(int((self.world_height / 10) / 3), int((self.world_height / 10) / 2))
+            rand_x = random.randint(rand_radi, self.world_width - rand_radi)
+            rand_y = random.randint(rand_radi, (self.world_height - int((self.world_height / 10)) * 2) - rand_radi - 30)
+            _make_circle(self.world, rand_y + int((self.world_height / 10)) * 2, rand_x, rand_radi, "coal ore block", True)
 
         # Adds Patches of Dirt in the Stone Layer.
         patches = random.randint(int(self.world_height / 10) * 5, int(self.world_width / 10) * 5)
