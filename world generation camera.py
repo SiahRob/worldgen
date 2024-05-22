@@ -54,7 +54,7 @@ class WorldGeneration:
             direction = random.choice(("up", "up", "up", "stay", "stay", "down", "down", "down"))
             if direction == "up" and value > -2:
                 value -= 1
-            elif direction == "down" and value < 2:
+            elif direction == "down" and value < 3:
                 value += 1
             grass = tsapp.Sprite("sprites/grass block.png", 0, 0)
             block = blocks.Block(grass, (), "grass block", True)
@@ -71,6 +71,34 @@ class WorldGeneration:
                     self.world[y][x].sprite.destroy()
                     self.world[y][x] = block
 
+        # Sprinkle some trees on the grass layer
+        for x in range(3, self.world_width, 6):
+            for y in range(0, self.world_height, 1):
+                if self.world[y][x].name == "grass block":
+                    for i in range(2):
+                        wood = tsapp.Sprite("sprites/wood block.png", 0, 0)
+                        block = blocks.Block(wood, (), "wood block", False)
+                        self.world[y - (i + 1)][x].sprite.destroy()
+                        self.world[y - (i + 1)][x] = block
+                        for i in range(1):
+                            leaf = tsapp.Sprite("sprites/leaf block.png", 0, 0)
+                            block = blocks.Block(leaf, (), "leaf block", False)
+                            leaf = tsapp.Sprite("sprites/leaf block.png", 0, 0)
+                            block1 = blocks.Block(leaf, (), "leaf block", False)
+                            leaf = tsapp.Sprite("sprites/leaf block.png", 0, 0)
+                            block2 = blocks.Block(leaf, (), "leaf block", False)
+                            leaf = tsapp.Sprite("sprites/leaf block.png", 0, 0)
+                            block3 = blocks.Block(leaf, (), "leaf block", False)
+                            self.world[y - (i + 3)][x].sprite.destroy()
+                            self.world[y - (i + 3)][x] = block
+                            self.world[y - (i + 4)][x].sprite.destroy()
+                            self.world[y - (i + 4)][x] = block1
+                            self.world[y - (i + 3)][x + 1].sprite.destroy()
+                            self.world[y - (i + 3)][x + 1] = block2
+                            self.world[y - (i + 3)][x - 1].sprite.destroy()
+                            self.world[y - (i + 3)][x - 1] = block3
+                    break
+        
         # Makes the fine line between the stone and dirt layer more "organic"
         for x in range(self.world_width):
             go_down = random.choice((False, False, True))
