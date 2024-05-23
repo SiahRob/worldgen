@@ -72,7 +72,7 @@ class WorldGeneration:
                     self.world[y][x] = block
 
         # Sprinkle some trees on the grass layer
-        for x in range(3, self.world_width, 6):
+        for x in range(2, self.world_width, 6):
             for y in range(0, self.world_height, 1):
                 if self.world[y][x].name == "grass block":
                     for i in range(2):
@@ -80,25 +80,24 @@ class WorldGeneration:
                         block = blocks.Block(wood, (), "wood block", False)
                         self.world[y - (i + 1)][x].sprite.destroy()
                         self.world[y - (i + 1)][x] = block
-                        for i in range(1):
-                            leaf = tsapp.Sprite("sprites/leaf block.png", 0, 0)
-                            block = blocks.Block(leaf, (), "leaf block", False)
-                            leaf = tsapp.Sprite("sprites/leaf block.png", 0, 0)
-                            block1 = blocks.Block(leaf, (), "leaf block", False)
-                            leaf = tsapp.Sprite("sprites/leaf block.png", 0, 0)
-                            block2 = blocks.Block(leaf, (), "leaf block", False)
-                            leaf = tsapp.Sprite("sprites/leaf block.png", 0, 0)
-                            block3 = blocks.Block(leaf, (), "leaf block", False)
-                            self.world[y - (i + 3)][x].sprite.destroy()
-                            self.world[y - (i + 3)][x] = block
-                            self.world[y - (i + 4)][x].sprite.destroy()
-                            self.world[y - (i + 4)][x] = block1
-                            self.world[y - (i + 3)][x + 1].sprite.destroy()
-                            self.world[y - (i + 3)][x + 1] = block2
-                            self.world[y - (i + 3)][x - 1].sprite.destroy()
-                            self.world[y - (i + 3)][x - 1] = block3
+                        leaf = tsapp.Sprite("sprites/leaf block.png", 0, 0)
+                        block = blocks.Block(leaf, (), "leaf block", False)
+                        leaf = tsapp.Sprite("sprites/leaf block.png", 0, 0)
+                        block1 = blocks.Block(leaf, (), "leaf block", False)
+                        leaf = tsapp.Sprite("sprites/leaf block.png", 0, 0)
+                        block2 = blocks.Block(leaf, (), "leaf block", False)
+                        leaf = tsapp.Sprite("sprites/leaf block.png", 0, 0)
+                        block3 = blocks.Block(leaf, (), "leaf block", False)
+                        self.world[y - (i + 3)][x].sprite.destroy()
+                        self.world[y - (i + 3)][x] = block
+                        self.world[y - (i + 4)][x].sprite.destroy()
+                        self.world[y - (i + 4)][x] = block1
+                        self.world[y - (i + 3)][x + 1].sprite.destroy()
+                        self.world[y - (i + 3)][x + 1] = block2
+                        self.world[y - (i + 3)][x - 1].sprite.destroy()
+                        self.world[y - (i + 3)][x - 1] = block3
                     break
-        
+
         # Makes the fine line between the stone and dirt layer more "organic"
         for x in range(self.world_width):
             go_down = random.choice((False, False, True))
@@ -132,7 +131,7 @@ class WorldGeneration:
         # Add some iron to the Stone Layer.
         patches = random.randint(int((self.world_height / 10) * 4), int((self.world_width / 10) * 4))
         for i in range(patches):
-            rand_radi = random.randint(int((self.world_height / 10) / 3.5), int((self.world_height / 10) / 2.5))
+            rand_radi = random.randint(2, 3)
             rand_x = random.randint(rand_radi, self.world_width - rand_radi)
             rand_y = random.randint(rand_radi + 17, (self.world_height - int((self.world_height / 10)) * 2) - rand_radi - 10)
             _make_circle(self.world, rand_y + int((self.world_height / 10)) * 2, rand_x, rand_radi, "iron ore block", True)
@@ -140,7 +139,7 @@ class WorldGeneration:
         # Add some coal to the Stone Layer.
         patches = random.randint(int(self.world_height / 10) * 5, int(self.world_width / 10) * 5)
         for i in range(patches):
-            rand_radi = random.randint(int((self.world_height / 10) / 3), int((self.world_height / 10) / 2))
+            rand_radi = random.randint(2, 4)
             rand_x = random.randint(rand_radi, self.world_width - rand_radi)
             rand_y = random.randint(rand_radi, (self.world_height - int((self.world_height / 10)) * 2) - rand_radi - 30)
             _make_circle(self.world, rand_y + int((self.world_height / 10)) * 2, rand_x, rand_radi, "coal ore block", True)
