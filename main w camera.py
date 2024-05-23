@@ -99,7 +99,7 @@ while window.is_running:
             if b <= 69:
                 b = 69
             window.background_color = (r, g, b)
-    elif world_class.world[int((world_class.world_height / 10)) * 2][0].sprite.y > player.y:
+    if world_class.world[int((world_class.world_height / 10)) * 2 + 1][0].sprite.y > player.y:
         if stored < int(world_class.world[17][0].sprite.y - player.y):
             r, g, b = window.background_color
             r += 3
