@@ -1,5 +1,4 @@
 import tsapp
-# import time
 import pygame
 import world_generation as w
 import blocks
@@ -21,6 +20,7 @@ window.add_object(player)
 rendered_blocks = []
 block_coll_var = 56
 while window.is_running:
+    stored = int(world_class.world[17][0].sprite.y - player.y)
     mouse_x, mouse_y = tsapp.get_mouse_position()
 
     for i in range(len(world)):
@@ -74,7 +74,6 @@ while window.is_running:
             for i in range(len(world)):
                 world[i].sprite.y += 33
 
-    #if tsapp.is_key_down(tsapp.K_s):
     for i in range(len(world)):
         if player.is_colliding_rect(world[i].sprite) and world[i].block_has_collision:
             block_top_face_coll = world[i].sprite.y + 56 > player.y + player.height > world[i].sprite.y
@@ -86,5 +85,34 @@ while window.is_running:
     else:
         for i in range(len(world)):
             world[i].sprite.y -= 16.5
+
+    if world_class.world[int((world_class.world_height / 10)) * 2][0].sprite.y < player.y:
+        if stored > int(world_class.world[17][0].sprite.y - player.y):
+            r, g, b = window.background_color
+            r -= 3
+            g -= 3
+            b -= 4
+            if r <= 69:
+                r = 69
+            if g <= 69:
+                g = 69
+            if b <= 69:
+                b = 69
+            print(r, g, b)
+            window.background_color = (r, g, b)
+    elif world_class.world[int((world_class.world_height / 10)) * 2][0].sprite.y > player.y:
+        if stored < int(world_class.world[17][0].sprite.y - player.y):
+            r, g, b = window.background_color
+            r += 3
+            g += 3
+            b += 4
+            if r >= 200:
+                r = 200
+            if g >= 200:
+                g = 200
+            if b >= 255:
+                b = 255
+            print(r, g, b)
+            window.background_color = (r, g, b)
 
     window.finish_frame()
