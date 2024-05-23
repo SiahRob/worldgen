@@ -98,7 +98,6 @@ while window.is_running:
                 g = 69
             if b <= 69:
                 b = 69
-            print(r, g, b)
             window.background_color = (r, g, b)
     elif world_class.world[int((world_class.world_height / 10)) * 2][0].sprite.y > player.y:
         if stored < int(world_class.world[17][0].sprite.y - player.y):
@@ -112,7 +111,6 @@ while window.is_running:
                 g = 200
             if b >= 255:
                 b = 255
-            print(r, g, b)
             window.background_color = (r, g, b)
 
     window.finish_frame()
